@@ -1,56 +1,40 @@
-/**
- * Global constant defining currency denominations in cents to avoid 
- * floating-point arithmetic errors.
- * @type {Array<{key: string, value: number}>}
- */
-const denominations = [
-    { key: "twenties", value: 2000 },
-    { key: "tens", value: 1000 },
-    { key: "fives", value: 500 },
-    { key: "ones", value: 100 },
-    { key: "quarters", value: 25 },
-    { key: "dimes", value: 10 },
-    { key: "nickels", value: 5 },
-    { key: "pennies", value: 1 }
-];
+import { CURRENCY_DENOMINATIONS } from './constants';
 
 /**
  * Calculates the breakdown of currency denominations for a given change amount.
- * Performs all calculations in cents to ensure precision.
- * @param {number} amountDue - The total cost of the transaction.
- * @param {number} amountReceived - The total amount provided by the customer.
- * @returns {Object} An object containing the total change and counts for each denomination.
- * @returns {number} return.changeTotal - The total change due in decimal format.
- * @returns {number} return.twenties - Count of $20 bills.
- * @returns {number} return.tens - Count of $10 bills.
- * @returns {number} return.fives - Count of $5 bills.
- * @returns {number} return.ones - Count of $1 bills.
- * @returns {number} return.quarters - Count of quarters.
- * @returns {number} return.dimes - Count of dimes.
- * @returns {number} return.nickels - Count of nickels.
- * @returns {number} return.pennies - Count of pennies.
+ * Performs all calculations in cents to ensure floating-point precision.
+ * * @param {number|string} amountDue - The total cost of the transaction.
+ * @param {number|string} amountReceived - The total amount provided by the customer.
+ * @returns {Object} An object containing the changeTotal, status, and coin counts.
  */
 export function calcChange(amountDue, amountReceived) {
+  // 1. CONVERT TO CENTS
+  // Using Math.round prevents floating-point errors like 0.1 + 0.2 = 0.30000000000000004
   let remaining = Math.round((amountReceived - amountDue) * 100);
 
+  // 2. INITIALIZE RESULT
+  // We start with the total decimal value. 
   const result = {
     changeTotal: remaining / 100,
-    twenties: 0,
-    tens: 0,
-    fives: 0,
-    ones: 0,
-    quarters: 0,
-    dimes: 0,
-    nickels: 0,
-    pennies: 0
   };
 
+  // 3. SEED THE OBJECT WITH ZEROS
+  // This ensures every key (twenties, tens, etc.) exists in the result object
+  CURRENCY_DENOMINATIONS.forEach(denom => {
+    result[denom.name] = 0;
+  });
+
+  // 4. THE NEGATIVE CHECK
+  // If they owe money, we return the negative changeTotal and the zeros
   if (remaining < 0) return result;
 
-  
-
-  for (let denom of denominations) {
-    result[denom.key] = Math.floor(remaining / denom.value);
+  // 5. THE CALCULATION LOOP
+  // We iterate through the master list imported from constants.js
+  for (let denom of CURRENCY_DENOMINATIONS) {
+    // How many of this denomination fit into the remaining amount?
+    result[denom.name] = Math.floor(remaining / denom.value);
+    
+    // Update 'remaining' to be whatever is left over after taking those out
     remaining %= denom.value;
   }
 

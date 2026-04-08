@@ -1,12 +1,10 @@
 /**
  * Universal Input Sanitizer
- * @param {any} value - The raw input from the user
- * @param {HTMLInputElement} element - The actual DOM element to check types/min/max
- * @returns {any} The "Clean" value
- */
-/**
- * Universal Input Sanitizer
- * Logic is driven by the HTML element's own attributes.
+ * * Logic is driven dynamically by the HTML element's own attributes (type, min, max, pattern).
+ * This ensures data integrity before it reaches the application state.
+ * * @param {string|number|boolean} value - The raw value received from the input event.
+ * @param {HTMLInputElement} element - The actual DOM element to extract validation constraints.
+ * @returns {string|number|boolean|FileList} The "Cleaned" and type-cast value.
  */
 export function sanitizeInput(value, element) {
   const { type, min, max, pattern, required } = element;
@@ -16,6 +14,7 @@ export function sanitizeInput(value, element) {
     // 1. NUMERIC FAMILY (number, range)
     case 'number':
     case 'range':
+      if (value === "") return "";
       cleanValue = parseFloat(value);
       if (isNaN(cleanValue)) return min || 0; 
       if (min !== "") cleanValue = Math.max(cleanValue, parseFloat(min));

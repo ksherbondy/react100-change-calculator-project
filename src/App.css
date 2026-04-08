@@ -1,1 +1,64 @@
-/* Add your custom css here */
+/**
+ * @file App.css
+ * @description Main stylesheet for the Change Calculator. 
+ * Implements a high-contrast theme using a dark blue "Primary" palette 
+ * to ensure clear visibility for financial data.
+ */
+
+/* --- Layout & Backgrounds --- */
+
+body {
+  /* Sets a black buffer zone outside the main container */
+  background-color: black; 
+  min-height: 100vh;
+  margin: 0;
+  color: white; 
+}
+
+.container-fluid {
+  /* The "Hero" background color: Deep Blue */
+  background-color: rgb(21, 75, 138);
+  min-height: 100vh; /* Ensures the blue stretches to the bottom */
+}
+
+/* --- Components & Cards --- */
+
+.output-container {
+    /* White wrapper for the results area to make cards pop */
+    background-color: white;
+    padding: 15px;
+    border-radius: 1%;
+}
+
+.card, .purple-card {
+  /* Dark text on light backgrounds for maximum readability */
+  color: #333; 
+  background-color: lightgrey;
+}
+
+.card-body {
+    /* Ensures the inner part of the 'Enter Information' card stays clean white */
+    background-color: white;
+}
+
+/* --- Interactive Elements --- */
+
+.btn {
+    /* Custom brand color for the calculate button */
+    background-color: rgb(25, 90, 163);
+    color: white;
+}
+
+.btn:hover {
+    /* Visual feedback for the user on mouse-over */
+    background-color: dodgerblue;
+    color: white;
+}
+
+/* --- Typography --- */
+
+h1 {
+  /* Thin, professional header styling */
+  color: white;
+  font-weight: 300;
+}
